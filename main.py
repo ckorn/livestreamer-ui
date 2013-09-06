@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 
 from PySide.QtGui import QApplication, QLabel, QPushButton, QLineEdit, QWidget, QTextEdit, QGridLayout, QTableWidget, QTableWidgetItem, QHeaderView
@@ -84,6 +85,11 @@ class LiveStreamer:
         self.window_ui = window
 
         self.links = set()
+
+        self.data_file = os.path.join(os.path.expanduser("~"), ".config", "livestreamer-ui", "data.txt")
+        folder=os.path.dirname(self.data_file)
+        if not os.path.exists(folder):
+                os.makedirs(folder)
 
 
     def select_stream_from_entry( self ):
@@ -220,7 +226,7 @@ class LiveStreamer:
 
         saveJsonText = json.dumps( linksList )
 
-        with open( 'data.txt', 'w', encoding= 'utf-8' ) as f:
+        with open( self.data_file, 'w', encoding= 'utf-8' ) as f:
             f.write( saveJsonText )
 
 
@@ -231,7 +237,7 @@ class LiveStreamer:
         """
 
         try:
-            file = open( 'data.txt', 'r', encoding= 'utf-8' )
+            file = open( self.data_file, 'r', encoding= 'utf-8' )
 
         except TryFileNotFound:
             return
