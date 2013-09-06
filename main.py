@@ -24,7 +24,9 @@ class LiveStreamer:
     def __init__( self ):
 
         url = QLineEdit()
+        quality = QLineEdit()
         urlLabel = QLabel( 'Url' )
+        qualityLabel = QLabel( 'Quality' )
         messages = QTextEdit()
         messagesLabel = QLabel( 'Messages' )
         links = QTableWidget( 0, 2 )
@@ -43,6 +45,7 @@ class LiveStreamer:
             # set the events
 
         url.returnPressed.connect( self.select_stream_from_entry )
+        quality.returnPressed.connect( self.select_stream_from_entry )
         links.itemDoubleClicked.connect( self.select_stream_from_link )
         clearMessages.clicked.connect( self.clear_messages )
         checkIfOnline.clicked.connect( self.check_if_online )
@@ -54,11 +57,13 @@ class LiveStreamer:
         mainLayout = QGridLayout()
 
             # first row
-        mainLayout.addWidget( urlLabel, 0, 0, 1, 2 )    # spans 2 columns
+        mainLayout.addWidget( urlLabel, 0, 0, 1, 1 )    # spans 1 column
+        mainLayout.addWidget( qualityLabel, 0, 1, 1, 1 )# spans 1 column
         mainLayout.addWidget( linksLabel, 0, 2, 1, 3 )  # spans 3 columns
 
             # second row  (links widget occupies 2 rows and 2 columns)
-        mainLayout.addWidget( url, 1, 0, 1, 2 )         # spans 2 columns
+        mainLayout.addWidget( url, 1, 0, 1, 1 )         # spans 1 column
+        mainLayout.addWidget( quality, 1, 1, 1, 1 )     # spans 1 column
         mainLayout.addWidget( links, 1, 2, 2, 3 )   # spans 3 columns
 
             # third row (messages widget occupies 2 columns)
@@ -80,6 +85,7 @@ class LiveStreamer:
         window.show()
 
         self.url_ui = url
+        self.quality_ui = quality
         self.messages_ui = messages
         self.links_ui = links
         self.window_ui = window
@@ -91,13 +97,21 @@ class LiveStreamer:
         if not os.path.exists(folder):
                 os.makedirs(folder)
 
+    def get_complete_url(self):
+        url = self.url_ui.text()
+
+        if url:
+            qual = self.quality_ui.text()
+            if qual:
+                url += " %s"%(qual)
+        return url
 
     def select_stream_from_entry( self ):
 
         """
             Gets the values from the ui elements, and executes the program in json mode, to determine if the values are valid
         """
-        url = self.url_ui.text()
+        url = self.get_complete_url()
         split_url = url.split()
 
         self.messages_ui.append( 'Trying to open stream: {}'.format( url ) )
@@ -172,7 +186,7 @@ class LiveStreamer:
 
     def add_selected_link( self ):
 
-        url = self.url_ui.text()
+        url = self.get_complete_url()
 
         if url:
 
