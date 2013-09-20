@@ -1,6 +1,7 @@
 import json
 
-from PySide.QtCore import QProcess
+from PySide.QtCore import QProcess, Qt
+from PySide.QtGui import QColor, QBrush
 
 
 class Stream:
@@ -44,6 +45,10 @@ class Stream:
         process.start( 'livestreamer', arguments )
         process.readyReadStandardOutput.connect( self.is_online_callback )
 
+        brush=QBrush(Qt.SolidPattern)
+        color=QColor(255,255,255) #white
+        brush.setColor(color)
+        tableWidgetItem.setBackground( brush )
         tableWidgetItem.setText( 'Checking..' )
 
         Stream.ALL_STREAMS.append( self )
@@ -62,16 +67,19 @@ class Stream:
             print( errorMessage )
             return
 
-
+        brush=QBrush(Qt.SolidPattern)
         if outputObject.get( 'error' ):
-
+            color=QColor(255,0,0) #red
             onlineStatus = 'Off'
         else:
+            color=QColor(0,255,0) #green
             onlineStatus = 'On'
+        brush.setColor(color)
 
 
         itemWidget = self.table_widget_item
 
+        itemWidget.setBackground( brush )
         itemWidget.setText( onlineStatus )
 
 
