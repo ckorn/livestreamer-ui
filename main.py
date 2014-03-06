@@ -2,7 +2,7 @@ import sys
 import os
 import json
 
-from PySide.QtGui import QApplication, QLabel, QPushButton, QLineEdit, QWidget, QTextEdit, QGridLayout, QTableWidget, QTableWidgetItem, QHeaderView
+from PySide.QtGui import QApplication, QLabel, QPushButton, QLineEdit, QWidget, QTextEdit, QGridLayout, QTableWidget, QTableWidgetItem, QHeaderView, QKeySequence
 from PySide.QtCore import Qt
 
 
@@ -51,6 +51,9 @@ class LiveStreamer:
         checkIfOnline.clicked.connect( self.check_if_online )
         addSelectedLink.clicked.connect( self.add_selected_link )
         removeSelectedLink.clicked.connect( self.remove_selected_link )
+
+        #set shortcut
+        checkIfOnline.setShortcut(QKeySequence(Qt.Key_F5))
 
             # set the layouts
 
